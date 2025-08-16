@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Section = { id: string; label: string };
 const SECTIONS: Section[] = [
@@ -9,23 +9,7 @@ const SECTIONS: Section[] = [
   { id: "contacto", label: "Contacto" },
 ];
 
-// ===== Hooks utilitarios =====
-function useScrollDirection(threshold = 6) {
-  const lastY = useRef(0);
-  const [dir, setDir] = useState<"up" | "down">("up");
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || 0;
-      const delta = y - lastY.current;
-      if (Math.abs(delta) < threshold) return;
-      setDir(delta > 0 ? "down" : "up");
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [threshold]);
-  return dir;
-}
+const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 
 function useCurrentSection(ids: string[]) {
   const [cur, setCur] = useState(ids[0] ?? "");
@@ -37,10 +21,7 @@ function useCurrentSection(ids: string[]) {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (best?.target?.id) setCur(best.target.id);
       },
-      {
-        rootMargin: "-24% 0px -56% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75],
-      }
+      { rootMargin: "-24% 0px -56% 0px", threshold: [0.1, 0.25, 0.5, 0.75] }
     );
     ids.forEach((id) => {
       const el = document.getElementById(id);
@@ -51,17 +32,13 @@ function useCurrentSection(ids: string[]) {
   return cur;
 }
 
-const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
-
-// ===== Componente =====
 export default function Navbar() {
-  const dir = useScrollDirection();
+  const [compact, setCompact] = useState(false);   // true si estamos fuera del top
+  const [menuOpen, setMenuOpen] = useState(false); // dropdown del pill
   const currentId = useCurrentSection(SECTIONS.map((s) => s.id));
+  const currentLabel = SECTIONS.find((s) => s.id === currentId)?.label ?? SECTIONS[0].label;
 
-  const [compact, setCompact] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // Activa modo compacto al pasar cierto scroll
+  // Compacto siempre que scrollY > 140 (independiente de subir/bajar)
   useEffect(() => {
     const onScroll = () => setCompact(window.scrollY > 140);
     onScroll();
@@ -69,23 +46,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Regla de visibilidad:
-  // - Header visible si no hay compacto o si subimos.
-  // - Pill visible si hay compacto y NO se ve el header (para que nunca "desaparezca" todo).
-  const showHeader = !compact || dir === "up";
-  const showPill = compact && !showHeader;
-
-  // Cerrar menú al hacer click fuera o con ESC
+  // Cerrar menú al click fuera / ESC
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      if (!t.closest?.("#nav-pill") && !t.closest?.("#nav-dropdown")) {
-        setMenuOpen(false);
-      }
+      if (!t.closest?.("#nav-pill") && !t.closest?.("#nav-dropdown")) setMenuOpen(false);
     };
-    const onEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
+    const onEsc = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onEsc);
     return () => {
@@ -94,52 +61,48 @@ export default function Navbar() {
     };
   }, []);
 
-  const currentLabel = SECTIONS.find((s) => s.id === currentId)?.label ?? SECTIONS[0].label;
-
   const goTo = (id: string) => {
     setMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  const showHeader = !compact; // solo en la parte alta
+  const showPill = compact;    // siempre fuera del top (subas o bajes)
 
   return (
     <>
-      {/* HEADER COMPLETO */}
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-transform duration-300",
-          showHeader ? "translate-y-0" : "-translate-y-full"
-        )}
-      >
-        <nav className="mx-auto max-w-6xl rounded-b-2xl bg-slate-900/70 backdrop-blur shadow ring-1 ring-slate-800">
-          <div className="flex items-center justify-between px-4 py-3 md:px-6">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="text-xl font-semibold tracking-tight text-orange-300"
-            >
-              Aday.dev
-            </button>
+      {/* BARRA COMPLETA (solo en top) */}
+      {showHeader && (
+        <header className="fixed inset-x-0 top-0 z-50">
+          <nav className="mx-auto max-w-6xl rounded-b-2xl bg-slate-900/80 backdrop-blur shadow ring-1 ring-slate-800">
+            <div className="flex items-center justify-between px-4 py-3 md:px-6">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className="text-xl font-semibold tracking-tight text-orange-300"
+              >
+                Aday.dev
+              </button>
+              <ul className="hidden gap-6 md:flex">
+                {SECTIONS.map((s) => (
+                  <li key={s.id}>
+                    <button
+                      onClick={() => goTo(s.id)}
+                      className={cn(
+                        "text-sm transition-colors",
+                        currentId === s.id ? "text-orange-300" : "text-slate-200/90 hover:text-white"
+                      )}
+                    >
+                      {s.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </nav>
+        </header>
+      )}
 
-            <ul className="hidden gap-6 md:flex">
-              {SECTIONS.map((s) => (
-                <li key={s.id}>
-                  <button
-                    onClick={() => goTo(s.id)}
-                    className={cn(
-                      "text-sm transition-colors",
-                      currentId === s.id ? "text-orange-300" : "text-slate-200/90 hover:text-white"
-                    )}
-                  >
-                    {s.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-      </header>
-
-      {/* PILL COMPACTO (SIEMPRE visible cuando bajamos) */}
+      {/* PILL COMPACTO (siempre fuera del top, tanto bajando como subiendo) */}
       {showPill && (
         <div className="fixed left-1/2 top-3 z-40 -translate-x-1/2 md:top-4">
           <div id="nav-pill" className="relative">
@@ -160,7 +123,6 @@ export default function Navbar() {
               </svg>
             </button>
 
-            {/* MENÚ COMPLETO DESPLEGABLE (apariencia de “barra entera”) */}
             {menuOpen && (
               <div
                 id="nav-dropdown"
