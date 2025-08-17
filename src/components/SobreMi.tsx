@@ -1,10 +1,5 @@
 import foto from "../assets/mi_foto.jpg";
 
-
-
-// IMPORTA tu foto si la tienes en src/assets
-// import foto from "../assets/mi-foto.jpg";
-
 export default function SobreMi() {
   return (
     <section
@@ -29,8 +24,7 @@ export default function SobreMi() {
         {/* Foto */}
         <div className="order-1 md:order-2 flex justify-center">
           <img
-            // src={foto} // si importas desde assets
-            src={foto} // si la pones en /public
+            src={foto}
             alt="Foto de Aday Martín"
             className="w-40 sm:w-56 md:w-72 lg:w-80 aspect-square object-cover rounded-full shadow-lg ring-1 ring-white/10"
           />

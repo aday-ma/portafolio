@@ -51,7 +51,7 @@ export default function Navbar() {
   const currentY = useRef(0);
 
   useEffect(() => {
-    const SHRINK_DISTANCE = 220; // px para completar el encogido
+    const SHRINK_DISTANCE = 140; // px para completar el encogido
     const DAMP = 0.14;           // suavizado
 
     const onScroll = () => {
