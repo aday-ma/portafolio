@@ -1,29 +1,29 @@
+import foto from "../assets/mi_foto.jpg";
+
+
+
 export default function SobreMi() {
   return (
-    <section id="sobre-mi" className="mx-auto max-w-5xl px-6 py-24 space-y-6">
-      <h2 className="text-3xl font-semibold">Sobre mí</h2>
-      <p className="text-slate-300">
-        Texto de prueba. Me apasiona el desarrollo web, la IA y los datos. Este bloque es
-        solo para forzar altura y ver el comportamiento del menú.
-      </p>
+    <section
+      id="sobre-mi"
+      className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-6 py-16 flex items-center justify-center"
+    >
+      <div className="max-w-5xl flex flex-col md:flex-row items-center gap-10">
+        
+        {/* Texto */}
+        <div className="flex-2 text-center md:text-left">
+          <h1 className="text-6xl font-bold mb-6">Desarrollador Fullstack</h1>
+          <p className="text-lg leading-relaxed">
+¡Hola! Soy Aday Martín, desarrollador fullstack con una especialización en Inteligencia Artificial y Big Data. <br></br> Me encanta la tecnología y todo lo que tenga que ver con crear, resolver problemas y experimentar con nuevas ideas. Siempre estoy buscando aprender algo nuevo, porque creo que la curiosidad es la mejor herramienta para crecer tanto en lo profesional como en lo personal.          </p>
+        </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="rounded-xl bg-slate-900/60 ring-1 ring-slate-800 p-4">
-            <div className="h-10 w-10 rounded-lg bg-slate-800 ring-1 ring-slate-700 mb-3" />
-            <div className="text-sm text-slate-200 font-medium">Skill #{i + 1}</div>
-            <div className="text-xs text-slate-400">Nivel intermedio</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-4 text-slate-400">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <p key={i}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer at justo ut sapien dictum
-            aliquam. Praesent feugiat dui id augue feugiat tempus. (Sobre mí #{i + 1})
-          </p>
-        ))}
+        {/* Foto */}
+        <div className="flex-1 flex justify-center">
+          <img
+              src={foto}
+            className="w-80 h-80 object-cover rounded-full shadow-lg"
+          />
+        </div>
       </div>
     </section>
   );

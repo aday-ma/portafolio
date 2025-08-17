@@ -1,10 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-
+@import "tailwindcss";
 html, body { scroll-behavior: smooth; }
-/* Si prefieres sin espaciador, puedes usar: */
-/* :root { scroll-padding-top: 80px; }  Ajusta 80px a la altura real del header */
 
+/* opcional: para ocultar scroll del menú si lo usas */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
