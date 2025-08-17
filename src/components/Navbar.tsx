@@ -2,13 +2,23 @@ import { useEffect, useRef, useState } from "react";
 
 const NAME = "Aday Martín";
 
+// ===== NUEVO: secciones en ES y EN =====
 type Section = { id: string; label: string };
-const SECTIONS: Section[] = [
+
+const SECTIONS_ES: Section[] = [
   { id: "sobre-mi", label: "Sobre mí" },
   { id: "proyectos", label: "Proyectos" },
   { id: "carrera", label: "Carrera" },
   { id: "educacion", label: "Educación" },
   { id: "contacto", label: "Contacto" },
+];
+
+const SECTIONS_EN: Section[] = [
+  { id: "sobre-mi", label: "About Me" },
+  { id: "proyectos", label: "Projects" },
+  { id: "carrera", label: "Career" },
+  { id: "educacion", label: "Education" },
+  { id: "contacto", label: "Contact" },
 ];
 
 const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
@@ -37,28 +47,30 @@ function useCurrentSection(ids: string[]) {
 }
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);     // menú móvil
+  const [menuOpen, setMenuOpen] = useState(false);
+  // ===== CAMBIO: idioma controlado (ES / EN) =====
+  const [language, setLanguage] = useState<"ES" | "EN">("ES");
+  const [theme, setTheme] = useState("light");
+
+  // ===== Deriva las secciones según idioma =====
+  const SECTIONS = language === "ES" ? SECTIONS_ES : SECTIONS_EN;
+
   const currentId = useCurrentSection(SECTIONS.map(s => s.id));
   const currentLabel = SECTIONS.find(s => s.id === currentId)?.label ?? SECTIONS[0].label;
 
-  const [language, setLanguage] = useState("ES");
-  const [theme, setTheme] = useState("light");
-
   // ----- Animación fluida de encogido por scroll -----
-  const [t, setT] = useState(0);              // 0..1 progreso
+  const [t, setT] = useState(0); // 0..1 progreso
   const rafRef = useRef<number | null>(null);
   const targetY = useRef(0);
   const currentY = useRef(0);
 
   useEffect(() => {
-    const SHRINK_DISTANCE = 140; // px para completar el encogido
-    const DAMP = 0.14;           // suavizado
-
+    const SHRINK_DISTANCE = 140;
+    const DAMP = 0.14;
     const onScroll = () => {
       targetY.current = window.scrollY;
       if (rafRef.current == null) tick();
     };
-
     const tick = () => {
       currentY.current = lerp(currentY.current, targetY.current, DAMP);
       setT(clamp(currentY.current / SHRINK_DISTANCE, 0, 1));
@@ -68,7 +80,6 @@ export default function Navbar() {
         rafRef.current = null;
       }
     };
-
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -77,11 +88,9 @@ export default function Navbar() {
     };
   }, []);
 
-  // Mostrar pill compacto cuando ya pasaste el encogido
   const showPill = t >= 1;
   const showHeader = !showPill;
 
-  // Derivados de t
   const scale = lerp(1, 0.97, t);
   const padY  = lerp(16, 8, t);
   const padX  = lerp(24, 16, t);
@@ -90,13 +99,11 @@ export default function Navbar() {
   const nameSize       = lerp(20, 18, t);
   const maxInnerWidth  = t < 0.02 ? "100%" : "72rem";
 
-  // Cerrar dropdowns al click fuera / ESC + focus handling
+  // Cerrar dropdowns al click fuera / ESC
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      // no cierres si clicas dentro del panel móvil
       if (!t.closest?.("#mobile-panel") && !t.closest?.("#mobile-trigger")) {
-        // no cierres por defecto; solo si está abierto:
         // setMenuOpen(false);
       }
     };
@@ -115,9 +122,36 @@ export default function Navbar() {
     return () => { document.documentElement.style.overflow = ""; };
   }, [menuOpen]);
 
+  // ===== NUEVO: init idioma desde localStorage y aplicar a <html> + data-* =====
+  useEffect(() => {
+    const saved = (localStorage.getItem("lang") as "ES" | "EN" | null) || "ES";
+    setLanguage(saved);
+    document.documentElement.setAttribute("lang", saved === "ES" ? "es" : "en");
+
+    // Si usas data-es/data-en en otras secciones, sincroniza en el primer render:
+    const htmlLang = saved === "ES" ? "es" : "en";
+    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach(el => {
+      el.innerText = el.dataset[htmlLang] || el.innerText;
+    });
+  }, []);
+
   const goTo = (id: string) => {
     setMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // ===== CAMBIO: toggle idioma que afecta Navbar (state) y resto (data-*) =====
+  const toggleLanguage = () => {
+    const next = language === "ES" ? "EN" : "ES";
+    setLanguage(next);
+    localStorage.setItem("lang", next);
+    const htmlLang = next === "ES" ? "es" : "en";
+    document.documentElement.setAttribute("lang", htmlLang);
+
+    // Si tienes textos con data-es/data-en en otras partes:
+    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach(el => {
+      el.innerText = el.dataset[htmlLang] || "";
+    });
   };
 
   return (
@@ -125,7 +159,7 @@ export default function Navbar() {
       {showHeader && (
         <header
           className="fixed inset-x-0 top-0 z-50"
-          style={{ paddingTop: "max(0px, env(safe-area-inset-top))" }} // soporte notch
+          style={{ paddingTop: "max(0px, env(safe-area-inset-top))" }}
         >
           <div className="bg-slate-900/90 backdrop-blur shadow">
             <nav
@@ -141,7 +175,7 @@ export default function Navbar() {
                 willChange: "transform, opacity, padding, max-width",
               }}
             >
-              {/* IZQUIERDA (móvil): botón hamburguesa */}
+              {/* IZQUIERDA */}
               <div className="flex items-center gap-2">
                 <button
                   id="mobile-trigger"
@@ -154,7 +188,6 @@ export default function Navbar() {
                   </svg>
                 </button>
 
-                {/* Nombre (en móvil se mantiene, centrado con el resto via layout) */}
                 <div
                   className="font-semibold tracking-tight text-orange-300"
                   style={{
@@ -167,7 +200,7 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* CENTRO: secciones (ocultas en móvil, visibles ≥ md) */}
+              {/* CENTRO: secciones */}
               <ul
                 className="hidden md:flex gap-5 lg:gap-6 overflow-x-auto no-scrollbar"
                 style={{
@@ -192,7 +225,7 @@ export default function Navbar() {
                 ))}
               </ul>
 
-              {/* DERECHA: botones (ocultos en móvil; dentro del panel móvil) */}
+              {/* DERECHA: botones */}
               <div
                 className="hidden sm:flex items-center gap-2"
                 style={{
@@ -201,7 +234,7 @@ export default function Navbar() {
                 }}
               >
                 <button
-                  onClick={() => setLanguage(language === "ES" ? "EN" : "ES")}
+                  onClick={toggleLanguage}
                   className="px-3 py-1 rounded-md border border-sky-400 hover:bg-sky-400/90 hover:text-white transition"
                 >
                   {language}
@@ -209,8 +242,10 @@ export default function Navbar() {
                 <button
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                   className="px-3 py-1 rounded-md border border-slate-400 hover:bg-slate-700/90 hover:text-white transition"
+                  data-es="Tema"
+                  data-en="Theme"
                 >
-                  Modo
+                  
                 </button>
               </div>
             </nav>
@@ -218,80 +253,74 @@ export default function Navbar() {
         </header>
       )}
 
-      {/* PILL compacto (≥ umbral) — igual que antes */}
+      {/* PILL compacto */}
       {showPill && (
-  <div className="fixed left-1/2 top-3 z-40 -translate-x-1/2 md:top-4">
-    <div id="nav-pill" className="relative">
-      <button
-        aria-haspopup="menu"
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full bg-slate-800/95 px-4 py-2 text-sm text-slate-100 shadow-lg ring-1 ring-slate-700 backdrop-blur transition-all duration-300"
-      >
-        <span className="font-medium">{currentLabel}</span>
-        <svg
-          className={cn("h-4 w-4 transition-transform", menuOpen && "rotate-180")}
-          viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-        >
-          <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.24l3.71-3.01a.75.75 0 111.04 1.08l-4.24 3.44a.75.75 0 01-.95 0L5.21 8.31a.75.75 0 01.02-1.1z" />
-        </svg>
-      </button>
-
-      {/* Dropdown completo (solo en desktop) */}
-      {menuOpen && (
-        <div
-          id="nav-dropdown"
-          role="menu"
-          className="hidden md:block absolute left-1/2 mt-2 w-[min(92vw,740px)]
-                     -translate-x-1/2 overflow-hidden rounded-2xl 
-                     bg-slate-900/95 p-4 shadow-2xl ring-1 ring-slate-700 backdrop-blur"
-        >
-          {/* Nombre arriba */}
-          <div className="text-center mb-3 font-semibold text-orange-300">
-            {NAME}
-          </div>
-
-          {/* Secciones */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
-            {SECTIONS.map((s) => (
-              <button
-                key={s.id}
-                role="menuitem"
-                onClick={() => goTo(s.id)}
-                className={cn(
-                  "rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-slate-800",
-                  currentId === s.id && "text-orange-300"
-                )}
+        <div className="fixed left-1/2 top-3 z-40 -translate-x-1/2 md:top-4">
+          <div id="nav-pill" className="relative">
+            <button
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="flex items-center gap-2 rounded-full bg-slate-800/95 px-4 py-2 text-sm text-slate-100 shadow-lg ring-1 ring-slate-700 backdrop-blur transition-all duration-300"
+            >
+              <span className="font-medium">{currentLabel}</span>
+              <svg
+                className={cn("h-4 w-4 transition-transform", menuOpen && "rotate-180")}
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
               >
-                {s.label}
-              </button>
-            ))}
-          </div>
+                <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.24l3.71-3.01a.75.75 0 111.04 1.08l-4.24 3.44a.75.75 0 01-.95 0L5.21 8.31a.75.75 0 01.02-1.1z" />
+              </svg>
+            </button>
 
-          {/* Botones idioma y modo */}
-          <div className="flex items-center justify-center gap-3">
-            <button
-              onClick={() => setLanguage(language === "ES" ? "EN" : "ES")}
-              className="px-3 py-1 rounded-md border border-sky-400 hover:bg-sky-400 hover:text-white transition"
-            >
-              {language}
-            </button>
-            <button
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              className="px-3 py-1 rounded-md border border-slate-400 hover:bg-slate-700 hover:text-white transition"
-            >
-              Modo
-            </button>
+            {menuOpen && (
+              <div
+                id="nav-dropdown"
+                role="menu"
+                className="hidden md:block absolute left-1/2 mt-2 w-[min(92vw,740px)]
+                           -translate-x-1/2 overflow-hidden rounded-2xl 
+                           bg-slate-900/95 p-4 shadow-2xl ring-1 ring-slate-700 backdrop-blur"
+              >
+                <div className="text-center mb-3 font-semibold text-orange-300">
+                  {NAME}
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
+                  {SECTIONS.map((s) => (
+                    <button
+                      key={s.id}
+                      role="menuitem"
+                      onClick={() => goTo(s.id)}
+                      className={cn(
+                        "rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-slate-800",
+                        currentId === s.id && "text-orange-300"
+                      )}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-center gap-3">
+                  <button
+                    onClick={toggleLanguage}
+                    className="px-3 py-1 rounded-md border border-sky-400 hover:bg-sky-400 hover:text-white transition"
+                  >
+                    {language}
+                  </button>
+                  <button
+                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                    className="px-3 py-1 rounded-md border border-slate-400 hover:bg-slate-700 hover:text-white transition"
+                  >
+                    Modo
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
-    </div>
-  </div>
-)}
 
-
-      {/* ===== PANEL MÓVIL A PANTALLA COMPLETA ===== */}
-      {/* Overlay + panel con animación; contiene secciones + botones idioma/modo */}
+      {/* PANEL MÓVIL */}
       <div
         className={cn(
           "sm:hidden fixed inset-0 z-50",
@@ -299,7 +328,6 @@ export default function Navbar() {
         )}
         aria-hidden={!menuOpen}
       >
-        {/* Fondo oscurecido */}
         <div
           onClick={() => setMenuOpen(false)}
           className={cn(
@@ -307,7 +335,6 @@ export default function Navbar() {
             menuOpen ? "opacity-100" : "opacity-0"
           )}
         />
-        {/* Panel */}
         <div
           id="mobile-panel"
           className={cn(
@@ -330,7 +357,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Links */}
           <nav className="px-4 mt-2 space-y-1">
             {SECTIONS.map((s) => (
               <button
@@ -346,13 +372,12 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Acciones (idioma/modo) */}
           <div className="px-4 mt-4 flex items-center gap-3">
             <button
-              onClick={() => setLanguage(language === "ES" ? "EN" : "ES")}
+              onClick={toggleLanguage}
               className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"
             >
-              Idioma: {language}
+              {language === "ES" ? "Idioma: ES" : "Language: EN"}
             </button>
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
