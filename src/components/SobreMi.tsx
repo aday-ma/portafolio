@@ -1,4 +1,6 @@
 import foto from "../assets/mi_foto.jpg";
+import cv from "../assets/cv.pdf";
+
 
 export default function SobreMi() {
 
@@ -28,7 +30,7 @@ export default function SobreMi() {
           {/* Botón CV */}
           <div className="mt-8">
             <a
-              href="public/cv.pdf"
+              href={cv}
               download
               data-es="📄 Descargar CV"
               data-en="📄 Download CV"
