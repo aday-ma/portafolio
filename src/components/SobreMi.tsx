@@ -1,8 +1,6 @@
 import foto from "../assets/mi_foto.jpg";
-import { useState } from "react";
 
 export default function SobreMi() {
-  const [lang, setLang] = useState<"es" | "en">("es");
 
   return (
     <section
@@ -18,7 +16,6 @@ export default function SobreMi() {
             data-es="Desarrollador Fullstack"
             data-en="Fullstack Developer"
           >
-            {lang === "es" ? "Desarrollador Fullstack" : "Fullstack Developer"}
           </h1>
 
           <p
@@ -26,9 +23,6 @@ export default function SobreMi() {
             data-es="¡Hola! Soy Aday Martín, desarrollador fullstack con una especialización en Inteligencia Artificial y Big Data. Me encanta la tecnología y todo lo que tenga que ver con crear, resolver problemas y experimentar con nuevas ideas. Siempre estoy buscando aprender algo nuevo, porque creo que la curiosidad es la mejor herramienta para crecer tanto en lo profesional como en lo personal."
             data-en="Hi! I'm Aday Martín, a fullstack developer with a specialization in Artificial Intelligence and Big Data. I love technology and everything related to creating, solving problems, and experimenting with new ideas. I'm always eager to learn something new, because I believe curiosity is the best tool to grow both professionally and personally."
           >
-            {lang === "es"
-              ? "¡Hola! Soy Aday Martín, desarrollador fullstack con una especialización en Inteligencia Artificial y Big Data. Me encanta la tecnología y todo lo que tenga que ver con crear, resolver problemas y experimentar con nuevas ideas. Siempre estoy buscando aprender algo nuevo, porque creo que la curiosidad es la mejor herramienta para crecer tanto en lo profesional como en lo personal."
-              : "Hi! I'm Aday Martín, a fullstack developer with a specialization in Artificial Intelligence and Big Data. I love technology and everything related to creating, solving problems, and experimenting with new ideas. I'm always eager to learn something new, because I believe curiosity is the best tool to grow both professionally and personally."}
           </p>
 
           {/* Botón CV */}
@@ -40,7 +34,6 @@ export default function SobreMi() {
               data-en="📄 Download CV"
               className="inline-block px-6 py-3 text-lg font-semibold rounded-xl bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 shadow transition-colors duration-200"
             >
-              {lang === "es" ? "📄 Descargar CV" : "📄 Download CV"}
             </a>
           </div>
         </div>
