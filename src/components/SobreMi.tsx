@@ -10,7 +10,7 @@ export default function SobreMi() {
       className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-6 py-16 flex items-center"
     >
       <div className="mx-auto w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 items-center gap-10">
-        
+
         {/* Texto */}
         <div className="order-2 md:order-1">
           <h1
@@ -38,16 +38,108 @@ export default function SobreMi() {
             >
             </a>
           </div>
+
+          <br></br> 
+          {/* Soft skills */}
+          <div className="mt-8">
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+              data-es="Soft skills"
+              data-en="Soft skills"
+            >
+              Soft skills
+            </h3>
+
+            <ul className="mt-3 flex flex-wrap gap-2">
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="🗣️ Comunicación"
+                  data-en="🗣️ Communication"
+                >
+                  <span aria-hidden>🗣️</span> <span>Comunicación</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="🤝 Trabajo en equipo"
+                  data-en="🤝 Teamwork"
+                >
+                  <span aria-hidden>🤝</span> <span>Trabajo en equipo</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="🧩 Resolución de problemas"
+                  data-en="🧩 Problem solving"
+                >
+                  <span aria-hidden>🧩</span> <span>Resolución de problemas</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="🧠 Pensamiento crítico"
+                  data-en="🧠 Critical thinking"
+                >
+                  <span aria-hidden>🧠</span> <span>Pensamiento crítico</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="📚 Aprendizaje continuo"
+                  data-en="📚 Continuous learning"
+                >
+                  <span aria-hidden>📚</span> <span>Aprendizaje continuo</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="⏱️ Gestión del tiempo"
+                  data-en="⏱️ Time management"
+                >
+                  <span aria-hidden>⏱️</span> <span>Gestión del tiempo</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="🎯 Empatía con el usuario"
+                  data-en="🎯 User empathy"
+                >
+                  <span aria-hidden>🎯</span> <span>Empatía con el usuario</span>
+                </span>
+              </li>
+              <li>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300/50 dark:border-slate-700 px-3 py-1 text-sm bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                  data-es="⚡ Proactividad"
+                  data-en="⚡ Proactivity"
+                >
+                  <span aria-hidden>⚡</span> <span>Proactividad</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+
         </div>
 
-        {/* Foto */}
-        <div className="order-1 md:order-2 flex justify-center">
-          <img
-            src={foto}
-            alt="Foto de Aday Martín"
-            className="w-40 sm:w-56 md:w-72 lg:w-80 aspect-square object-cover rounded-full shadow-lg ring-1 ring-white/10"
-          />
-        </div>
+<div className="order-1 md:order-2 flex justify-center md:self-start md:-mt-4">
+  <img
+    src={foto}
+    alt="Foto de Aday Martín"
+    className="w-40 sm:w-56 md:w-72 lg:w-100 aspect-square object-cover rounded-full shadow-lg ring-1 ring-white/10"
+  />
+</div>
+
+
+
+
       </div>
     </section>
   );

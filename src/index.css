@@ -4,3 +4,5 @@ html, body { scroll-behavior: smooth; }
 /* opcional: para ocultar scroll del menú si lo usas */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+

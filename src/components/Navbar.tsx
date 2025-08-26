@@ -7,19 +7,23 @@ type Section = { id: string; label: string };
 
 const SECTIONS_ES: Section[] = [
   { id: "sobre-mi", label: "Sobre mí" },
-  { id: "proyectos", label: "Proyectos" },
-  { id: "carrera", label: "Carrera" },
+  { id: "skills", label: "Habilidades" },
   { id: "educacion", label: "Educación" },
+  { id: "carrera", label: "Carrera" },
+  { id: "proyectos", label: "Proyectos" },
   { id: "contacto", label: "Contacto" },
 ];
 
 const SECTIONS_EN: Section[] = [
   { id: "sobre-mi", label: "About Me" },
-  { id: "proyectos", label: "Projects" },
-  { id: "carrera", label: "Career" },
+  { id: "skills", label: "Skills" },
   { id: "educacion", label: "Education" },
+  { id: "carrera", label: "Career" },
+  { id: "proyectos", label: "Projects" },
   { id: "contacto", label: "Contact" },
+
 ];
+
 
 const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
@@ -245,7 +249,7 @@ export default function Navbar() {
                   data-es="Tema"
                   data-en="Theme"
                 >
-                  
+                  Tema
                 </button>
               </div>
             </nav>
@@ -375,9 +379,10 @@ export default function Navbar() {
           <div className="px-4 mt-4 flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"
+              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"  
             >
               {language === "ES" ? "Idioma: ES" : "Language: EN"}
+              
             </button>
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}

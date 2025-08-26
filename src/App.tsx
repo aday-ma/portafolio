@@ -5,6 +5,8 @@ import Proyectos from "./components/Proyectos";
 import Carrera from "./components/Carrera";
 import Educacion from "./components/Educacion";
 import Contacto from "./components/Contacto";
+import Skills from "./components/Skills";
+
 
 // App.tsx
 export default function App() {
@@ -12,9 +14,10 @@ export default function App() {
     <main className="min-h-screen bg-gray-900 text-gray-100 pt-24">
       <Navbar />
       <SobreMi />
-      <Proyectos />
-      <Carrera />
+      <Skills />
       <Educacion />
+      <Carrera />
+      <Proyectos />
       <Contacto />
     </main>
   );
