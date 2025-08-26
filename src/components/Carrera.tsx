@@ -24,8 +24,8 @@ const CAREER: Role[] = [
       { es: "Python", en: "Python" },
       { es: "PHP", en: "PHP" },    
       { es: "Javascript", en: "Javascript" },
-      { es: "MongoDB", en: "Javascript" },
-      { es: "MySQLi", en: "Javascript" },
+      { es: "MongoDB", en: "MongoDB" },
+      { es: "MySQLi", en: "MySQLi" },
       { es: "React", en: "React" },
       { es: "Typescript", en: "React" },
       { es: "Git", en: "Git" },
@@ -42,7 +42,7 @@ const CAREER: Role[] = [
     period: "2022-2024",
     title: { es: "Desarrollador de Software - Salesforce", en: "Software Developer - Salesforce" },
     company: { es: "Atos", en: "Atos" },
-    location: { es: "Sevilla", en: "Seville" },
+    location: { es: "Sevilla, España", en: "Seville, Spain" },
     mode: { es: "Teletrabajo", en: "Telecommuting" },
     summary: {
       es: "Desarrollo y mantenimiento de una aplicacion en Salesforce, creando nuevas funcionalidades para la misma y corrigiendo errores que se daban en el dia.",
@@ -83,7 +83,6 @@ const CAREER: Role[] = [
 export default function Carrera() {
   return (
     <section id="carrera" className="relative mx-auto max-w-5xl px-6 py-24">
-      {/* Fondo sutil para la sección, igual que en Educación */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(251,146,60,0.08),transparent_70%)]" />
 
       <h2
