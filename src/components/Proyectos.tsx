@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import portfolioImg from "../assets/mockups/portfolio.png";
+import privadoImg from "../assets/mockups/privado.png";
 
 
 // =====================
@@ -25,7 +27,7 @@ const PROJECTS: Project[] = [
     title: "🌐 Portfolio Personal",
     description:
       "Portfolio en React + Tailwind con animaciones, navegación fluida y secciones de carrera, educación y contacto.",
-    imageSrc: "../assets/portfolio.png",
+    imageSrc: portfolioImg,
     tech: ["React", "Tailwind", "TypeScript", "HTML", "CSS", "Git"],
     year: new Date().getFullYear(),
     role: "Desarrolladora Frontend",
@@ -35,7 +37,7 @@ const PROJECTS: Project[] = [
   {
     id: "freelance-1",
     title: "💼 Proyecto Freelance",
-    imageSrc: "../assets/privado.png",
+    imageSrc: privadoImg,
     description:
       "Sitio web a medida para cliente: pagina de venta con sistema de logeo, compra totalmente funcional, correos y administracion tanto de productos como de pedidos.",
     tech: ["HTML", "CSS", "Javascript", "PHP"],
