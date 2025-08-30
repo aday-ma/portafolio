@@ -27,7 +27,7 @@ const SECTIONS_EN: Section[] = [
 
 const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
-const lerp  = (a: number, b: number, t: number) => a + (b - a) * t;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 function useCurrentSection(ids: string[]) {
   const [cur, setCur] = useState(ids[0] ?? "");
@@ -49,6 +49,19 @@ function useCurrentSection(ids: string[]) {
   }, [ids]);
   return cur;
 }
+
+
+// Cambia los placeholder de <input>/<textarea> leyendo data-*-placeholder
+function updatePlaceholders(lang: "ES" | "EN") {
+  const attr = lang === "EN" ? "data-en-placeholder" : "data-es-placeholder";
+  document
+    .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(`[${attr}]`)
+    .forEach((el) => {
+      const val = el.getAttribute(attr);
+      if (val) el.placeholder = val;
+    });
+}
+
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -96,12 +109,12 @@ export default function Navbar() {
   const showHeader = !showPill;
 
   const scale = lerp(1, 0.97, t);
-  const padY  = lerp(16, 8, t);
-  const padX  = lerp(24, 16, t);
+  const padY = lerp(16, 8, t);
+  const padX = lerp(24, 16, t);
   const opacityContent = lerp(1, 0.82, t);
-  const nameOpacity    = lerp(1, 0.9, t);
-  const nameSize       = lerp(20, 18, t);
-  const maxInnerWidth  = t < 0.02 ? "100%" : "72rem";
+  const nameOpacity = lerp(1, 0.9, t);
+  const nameSize = lerp(20, 18, t);
+  const maxInnerWidth = t < 0.02 ? "100%" : "72rem";
 
   // Cerrar dropdowns al click fuera / ESC
   useEffect(() => {
@@ -130,14 +143,23 @@ export default function Navbar() {
   useEffect(() => {
     const saved = (localStorage.getItem("lang") as "ES" | "EN" | null) || "ES";
     setLanguage(saved);
-    document.documentElement.setAttribute("lang", saved === "ES" ? "es" : "en");
 
-    // Si usas data-es/data-en en otras secciones, sincroniza en el primer render:
     const htmlLang = saved === "ES" ? "es" : "en";
-    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach(el => {
-      el.innerText = el.dataset[htmlLang] || el.innerText;
+    document.documentElement.setAttribute("lang", htmlLang);
+
+    // 👉 añade esta línea:
+    document.documentElement.setAttribute("data-lang", htmlLang);
+
+    // Tu lógica que ya escribe textos con data-es/data-en…
+    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach((el) => {
+      const v = el.getAttribute(`data-${htmlLang}`);
+      if (v != null) el.textContent = v;
     });
+
+    // 👉 y esta línea para los placeholders:
+    updatePlaceholders(saved);
   }, []);
+
 
   const goTo = (id: string) => {
     setMenuOpen(false);
@@ -149,14 +171,23 @@ export default function Navbar() {
     const next = language === "ES" ? "EN" : "ES";
     setLanguage(next);
     localStorage.setItem("lang", next);
+
     const htmlLang = next === "ES" ? "es" : "en";
     document.documentElement.setAttribute("lang", htmlLang);
 
-    // Si tienes textos con data-es/data-en en otras partes:
-    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach(el => {
-      el.innerText = el.dataset[htmlLang] || "";
+    // 👉 añade:
+    document.documentElement.setAttribute("data-lang", htmlLang);
+
+    // Mantienes tu actualización de textos:
+    document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach((el) => {
+      const v = el.getAttribute(`data-${htmlLang}`);
+      if (v != null) el.textContent = v;
     });
+
+    // 👉 y actualizamos placeholders:
+    updatePlaceholders(next);
   };
+
 
   return (
     <>
@@ -379,10 +410,10 @@ export default function Navbar() {
           <div className="px-4 mt-4 flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"  
+              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"
             >
               {language === "ES" ? "Idioma: ES" : "Language: EN"}
-              
+
             </button>
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}

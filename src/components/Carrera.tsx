@@ -22,7 +22,7 @@ const CAREER: Role[] = [
     },
     highlights: [
       { es: "Python", en: "Python" },
-      { es: "PHP", en: "PHP" },    
+      { es: "PHP", en: "PHP" },
       { es: "Javascript", en: "Javascript" },
       { es: "MongoDB", en: "MongoDB" },
       { es: "MySQLi", en: "MySQLi" },

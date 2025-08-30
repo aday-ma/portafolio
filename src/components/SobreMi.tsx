@@ -39,7 +39,7 @@ export default function SobreMi() {
             </a>
           </div>
 
-          <br></br> 
+          <br></br>
           {/* Soft skills */}
           <div className="mt-8">
             <h3
@@ -129,13 +129,13 @@ export default function SobreMi() {
 
         </div>
 
-<div className="order-1 md:order-2 flex justify-center md:self-start md:-mt-4">
-  <img
-    src={foto}
-    alt="Foto de Aday Martín"
-    className="w-40 sm:w-56 md:w-72 lg:w-100 aspect-square object-cover rounded-full shadow-lg ring-1 ring-white/10"
-  />
-</div>
+        <div className="order-1 md:order-2 flex justify-center md:self-start md:-mt-4">
+          <img
+            src={foto}
+            alt="Foto de Aday Martín"
+            className="w-40 sm:w-56 md:w-72 lg:w-100 aspect-square object-cover rounded-full shadow-lg ring-1 ring-white/10"
+          />
+        </div>
 
 
 
