@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import portfolioImg from "../assets/mockups/portfolio.png";
-import privadoImg from "../assets/mockups/privado.png";
+import portfolioImg from "../assets/portfolio.png";
+import privadoImg from "../assets/privado.png";
 
 
 // =====================
