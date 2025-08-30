@@ -6,14 +6,6 @@ import foto from "../assets/mi_foto.jpg";
 // Patrón i18n igual que "SobreMi": data-es / data-en en el propio elemento
 // ========================
 
-function applyLangPlaceholders(lang: "es" | "en") {
-  const attr = lang === "en" ? "data-en-placeholder" : "data-es-placeholder";
-  document.querySelectorAll<HTMLElement>(`[${attr}]`).forEach(el => {
-    const val = el.getAttribute(attr);
-    if (val && el instanceof HTMLInputElement) el.placeholder = val;
-    if (val && el instanceof HTMLTextAreaElement) el.placeholder = val;
-  });
-}
 
 export default function Contact() {
 
