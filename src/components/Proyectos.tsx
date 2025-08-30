@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import portfolio from "../assets/portfolio.png";
+
 
 // =====================
 // Tipos y datos ejemplo
@@ -24,7 +26,7 @@ const PROJECTS: Project[] = [
     title: "🌐 Portfolio Personal",
     description:
       "Portfolio en React + Tailwind con animaciones, navegación fluida y secciones de carrera, educación y contacto.",
-    imageSrc: "public/mockups/portfolio.png",
+    imageSrc: "../assets/portfolio.png",
     tech: ["React", "Tailwind", "TypeScript", "HTML", "CSS", "Git"],
     year: new Date().getFullYear(),
     role: "Desarrolladora Frontend",
@@ -34,7 +36,7 @@ const PROJECTS: Project[] = [
   {
     id: "freelance-1",
     title: "💼 Proyecto Freelance",
-    imageSrc: "public/mockups/privado.png",
+    imageSrc: "../assets/privado.png",
     description:
       "Sitio web a medida para cliente: pagina de venta con sistema de logeo, compra totalmente funcional, correos y administracion tanto de productos como de pedidos.",
     tech: ["HTML", "CSS", "Javascript", "PHP"],
