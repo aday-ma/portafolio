@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import portfolio from "../assets/portfolio.png";
 
 
 // =====================
