@@ -307,7 +307,7 @@ export default function Navbar() {
                            p-4 shadow-2xl backdrop-blur
                            bg-[rgb(var(--card))]/95 ring-1 ring-[rgb(var(--card-ring))]"
               >
-                <div className="text-center mb-3 font-semibold" style={{ color: "rgb(251 146 60)" }}>
+                <div className="text-center mb-3 font-semibold" style={{ color: "rgb(var(--brand))" }}>
                   {NAME}
                 </div>
 
