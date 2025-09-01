@@ -96,20 +96,20 @@ export default function Carrera() {
       <div className="relative pl-6">
         {/* 🚦 Rail con degradado INVERTIDO:
             empieza transparente arriba y termina intenso abajo */}
-        <div className="absolute left-0 top-0 h-full w-1 rounded-full bg-gradient-to-b from-transparent via-orange-400/30 to-orange-400/80" />
+        <div className="absolute left-0 top-0 h-full w-1 rounded-full bg-gradient-to-b from-transparent via-blue-400/30 to-blue-400/80" />
 
         <div className="space-y-8">
           {CAREER.map((item, idx) => (
             <article
               key={idx}
-              className="relative rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800/70 transition-transform duration-300 hover:translate-x-1 hover:shadow-lg hover:shadow-orange-400/10"
+              className="relative rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800/70 transition-transform duration-300 hover:translate-x-1 hover:shadow-lg hover:shadow-blue-400/10"
             >
               {/* Nodo */}
-              <span className="absolute -left-3 top-6 inline-block h-4 w-4 rounded-full bg-orange-400 ring-4 ring-slate-950" />
+              <span className="absolute -left-3 top-6 inline-block h-4 w-4 rounded-full bg-blue-400 ring-4 ring-slate-950" />
 
               {/* Cabecera */}
               <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-1 text-xs font-semibold text-orange-300">
+                <span className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-1 text-xs font-semibold text-blue-300">
                   {item.period}
                 </span>
 
@@ -183,7 +183,7 @@ export default function Carrera() {
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1 text-sm text-orange-300 hover:text-orange-200"
+                      className="group inline-flex items-center gap-1 text-sm text-blue-300 hover:text-blue-200"
                       data-es={l.label.es}
                       data-en={l.label.en}
                     >

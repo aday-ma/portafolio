@@ -11,7 +11,7 @@ import Skills from "./components/Skills";
 // App.tsx
 export default function App() {
   return (
-    <main className="min-h-screen bg-gray-900 text-gray-100 pt-24">
+    <main className="min-h-screen bg-app text-app transition-colors">
       <Navbar />
       <SobreMi />
       <Skills />

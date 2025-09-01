@@ -78,20 +78,20 @@ export default function Educacion() {
       {/* Línea temporal */}
       <div className="relative pl-6">
         {/* Rail */}
-        <div className="absolute left-0 top-0 h-full w-1 rounded-full bg-gradient-to-b from-orange-400/80 via-orange-400/30 to-transparent" />
+        <div className="absolute left-0 top-0 h-full w-1 rounded-full bg-gradient-to-b from-blue-400/80 via-blue-400/30 to-transparent" />
 
         <div className="space-y-8">
           {EDUCATION.map((item, idx) => (
             <article
               key={idx}
-              className="relative rounded-2xl ring-1 ring-slate-800/70 bg-slate-900/60 p-5 transition-transform duration-300 hover:translate-x-1 hover:shadow-lg hover:shadow-orange-400/10"
+              className="relative rounded-2xl ring-1 ring-slate-800/70 bg-slate-900/60 p-5 transition-transform duration-300 hover:translate-x-1 hover:shadow-lg hover:shadow-blue-400/10"
             >
               {/* Nodo */}
-              <span className="absolute -left-3 top-6 inline-block h-4 w-4 rounded-full bg-orange-400 ring-4 ring-slate-950" />
+              <span className="absolute -left-3 top-6 inline-block h-4 w-4 rounded-full bg-blue-400 ring-4 ring-slate-950" />
 
               {/* Cabecera */}
               <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-1 text-xs font-semibold text-orange-300">
+                <span className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-1 text-xs font-semibold text-blue-300">
                   {item.period}
                 </span>
 
@@ -168,7 +168,7 @@ export default function Educacion() {
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1 text-sm text-orange-300 hover:text-orange-200"
+                      className="group inline-flex items-center gap-1 text-sm text-brand hover:text-brand"
                       data-es={l.label.es}
                       data-en={l.label.en}
                     >

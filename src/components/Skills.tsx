@@ -1,5 +1,4 @@
 // src/components/Skills.tsx
-
 import { useEffect, useState } from "react";
 
 type Skill = {
@@ -23,12 +22,15 @@ function SkillBar({ skill }: { skill: Skill }) {
   return (
     <div className="mb-3">
       <div className="flex justify-between text-sm mb-1">
-        <span>{skill.name}</span>
-        <span>{skill.level}%</span>
+        <span className="text-[rgb(var(--fg))]">{skill.name}</span>
+        <span className="text-[rgb(var(--muted))]">{skill.level}%</span>
       </div>
-      <div className="w-full bg-slate-200 rounded-xl h-3 overflow-hidden">
+
+      {/* Track */}
+      <div className="w-full rounded-xl h-3 overflow-hidden bg-[rgb(var(--card-ring))]/40">
+        {/* Fill */}
         <div
-          className="h-3 bg-blue-500 rounded-xl transition-all duration-700 ease-out"
+          className="h-3 rounded-xl transition-all duration-700 ease-out bg-[rgb(var(--accent))]"
           style={{ width: `${width}%` }}
         />
       </div>
@@ -38,8 +40,15 @@ function SkillBar({ skill }: { skill: Skill }) {
 
 function SkillCard({ title, skills }: CardProps) {
   return (
-    <div className="bg-white/5 shadow-lg rounded-2xl p-6 w-full md:w-1/3">
-      <h3 className="text-xl font-semibold mb-4 text-center">{title}</h3>
+    <div className="
+      w-full md:w-1/3
+      rounded-2xl p-6 shadow
+      bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))]
+      transition-colors
+    ">
+      <h3 className="text-xl font-semibold mb-4 text-center text-[rgb(var(--fg))]">
+        {title}
+      </h3>
       {skills.map((s) => (
         <SkillBar key={s.name} skill={s} />
       ))}
@@ -51,9 +60,15 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="px-6 py-16 bg-slate-950 text-slate-100"
+      className="px-6 py-16 bg-[rgb(var(--bg))] text-[rgb(var(--fg))] transition-colors"
     >
-      <h2 className="text-3xl font-bold text-center mb-10">Skills</h2>
+      <h2
+        className="text-3xl font-bold text-center mb-10"
+        data-es="Habilidades"
+        data-en="Skills"
+      >
+        Skills
+      </h2>
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Frontend */}
@@ -80,7 +95,6 @@ export default function Skills() {
             { name: "MySQL", level: 80 },
             { name: "MariaDB", level: 65 },
             { name: "MongoDB", level: 75 },
-
           ]}
         />
 

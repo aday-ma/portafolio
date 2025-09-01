@@ -2,21 +2,16 @@ import { useMemo, useRef, useState } from "react";
 import foto from "../assets/mi_foto.jpg";
 
 // ========================
-// Contact Section (React + Tailwind)
-// Patrón i18n igual que "SobreMi": data-es / data-en en el propio elemento
+// Contact Section (React + Tailwind + theme variables)
 // ========================
 
-
 export default function Contact() {
-
-
-
   // ==== Ajusta aquí tus datos ====
   const FULL_NAME = "Aday Martin Aguilar";
   const TITLE = "Desarrollador Full-Stack";
-  const EMAIL = "adaymartin.ma@gmail.com"; // se usa para mailto, Gmail compose y vCard
-  const PHONE = "+34 658 48 71 07";    // opcional vCard ("" si no quieres)
-  const LOCATION = "Sevilla, España"; // opcional vCard
+  const EMAIL = "adaymartin.ma@gmail.com";
+  const PHONE = "+34 658 48 71 07";
+  const LOCATION = "Sevilla, España";
 
   const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvgbazkz";
 
@@ -87,18 +82,16 @@ export default function Contact() {
   }
 
   const [copied, setCopied] = useState(false);
-  // ===== Copiar email con feedback =====
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500); // vuelve al estado normal
-    } catch { }
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
   }
 
-
   return (
-    <section id="contacto" className="px-6 py-20 bg-slate-950 text-slate-100">
+    <section id="contacto" className="px-6 py-20 bg-[rgb(var(--bg))] text-[rgb(var(--fg))] transition-colors">
       <div className="mx-auto max-w-5xl">
         <header className="mb-10 text-center">
           <h2
@@ -107,7 +100,7 @@ export default function Contact() {
             data-en="Contact"
           />
           <p
-            className="mt-2 text-slate-300"
+            className="mt-2 text-sm text-[rgb(var(--muted))]"
             data-es="Hablemos sobre tu proyecto o colaboración."
             data-en="Let’s talk about your project or a collaboration."
           />
@@ -115,7 +108,7 @@ export default function Contact() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* ===== Formulario ===== */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 shadow-xl">
+          <div className="rounded-2xl p-6 shadow bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] transition-colors">
             <h3
               className="text-xl font-semibold mb-4"
               data-es="Envíame un mensaje"
@@ -129,12 +122,12 @@ export default function Contact() {
               method="POST"
               className="space-y-4"
             >
-              {/* Honey-pot invisible */}
+              {/* Honey-pot */}
               <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
 
               <div>
                 <label
-                  className="block text-sm mb-1"
+                  className="block text-sm mb-1 text-[rgb(var(--fg))]"
                   htmlFor="name"
                   data-es="Nombre"
                   data-en="Name"
@@ -147,13 +140,13 @@ export default function Contact() {
                   placeholder="Name"
                   data-es-placeholder="Tu nombre"
                   data-en-placeholder="Your name"
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] px-3 py-2 outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] transition-colors"
                 />
               </div>
 
               <div>
                 <label
-                  className="block text-sm mb-1"
+                  className="block text-sm mb-1 text-[rgb(var(--fg))]"
                   htmlFor="email"
                   data-es="Email"
                   data-en="Email"
@@ -166,13 +159,13 @@ export default function Contact() {
                   placeholder="tunombre@email.com"
                   data-es-placeholder="tunombre@email.com"
                   data-en-placeholder="youremail@example.com"
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] px-3 py-2 outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] transition-colors"
                 />
               </div>
 
               <div>
                 <label
-                  className="block text-sm mb-1"
+                  className="block text-sm mb-1 text-[rgb(var(--fg))]"
                   htmlFor="message"
                   data-es="Mensaje"
                   data-en="Message"
@@ -185,27 +178,30 @@ export default function Contact() {
                   placeholder="Cuéntame en qué te puedo ayudar"
                   data-es-placeholder="Cuéntame en qué te puedo ayudar"
                   data-en-placeholder="Tell me how I can help"
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] px-3 py-2 outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 font-medium hover:bg-indigo-500 transition disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:opacity-60
+                           bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))] hover:opacity-90"
                 data-es={status === "loading" ? "Enviando…" : "Enviar"}
                 data-en={status === "loading" ? "Sending…" : "Send"}
               />
               {status === "success" && (
                 <p
-                  className="text-sm text-emerald-400"
+                  className="text-sm"
+                  style={{ color: "rgb(16 185 129)" }} // emerald-500 aprox (puedes crear --success si quieres)
                   data-es="¡Gracias! He recibido tu mensaje."
                   data-en="Thanks! I’ve received your message."
                 />
               )}
               {status === "error" && (
                 <p
-                  className="text-sm text-rose-400"
+                  className="text-sm"
+                  style={{ color: "rgb(244 63 94)" }} // rose-500 aprox (o crea --error)
                   data-es={errorMsg || "No se pudo enviar el formulario."}
                   data-en={"Couldn’t send the form."}
                 />
@@ -213,14 +209,14 @@ export default function Contact() {
             </form>
 
             <p
-              className="mt-3 text-xs text-slate-400"
-              data-es="Este formulario usa Formspree, no necesitas servidor propio."
-              data-en="This form uses Formspree—no backend needed."
+              className="mt-3 text-xs text-[rgb(var(--muted))]"
+              data-es="Este formulario usa Formspree"
+              data-en="This form uses Formspree"
             />
           </div>
 
           {/* ===== Alternativas rápidas ===== */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 shadow-xl flex flex-col gap-6">
+          <div className="rounded-2xl p-6 shadow bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] transition-colors flex flex-col gap-6">
             <div>
               <h3
                 className="text-xl font-semibold mb-3"
@@ -230,7 +226,8 @@ export default function Contact() {
               <div className="flex flex-wrap items-center gap-3">
                 <a
                   href={`mailto:${EMAIL}`}
-                  className="btn-soft"
+                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 transition
+                             ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
                   data-es="📧 Email"
                   data-en="📧 Email"
                 />
@@ -238,30 +235,32 @@ export default function Contact() {
                   href={gmailComposeUrl(EMAIL)}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-soft"
+                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 transition
+                             ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
                   data-es="✉️ Gmail"
                   data-en="✉️ Gmail"
                 />
                 <button
                   onClick={copyEmail}
-                  className={`btn-soft ${copied ? "ring-emerald-400/60 text-emerald-300" : ""}`}
-                  // si quieres, deja el title fijo o lo quitamos para no duplicar idiomas
+                  className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 transition
+                              ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60 ${
+                                copied ? "ring-2" : ""
+                              }`}
                   title="Copiar email"
                 >
                   <span aria-hidden>📋</span>
                   {copied ? (
-                    // un solo nodo con data-es / data-en (tu Navbar ya lo rellena)
                     <span data-es="¡Copiado!" data-en="Copied!"></span>
                   ) : (
                     <span data-es="Copiar email" data-en="Copy email"></span>
                   )}
                 </button>
 
-
                 <a
                   href={vcardHref}
                   download={`${FULL_NAME.replace(/\s+/g, "_")}.vcf`}
-                  className="btn-soft"
+                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 transition
+                             ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
                   data-es="💾 Guardar contacto"
                   data-en="💾 Save contact"
                 />
@@ -281,7 +280,8 @@ export default function Contact() {
                       href={href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 hover:border-slate-500 hover:bg-slate-800 transition"
+                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2 transition
+                                 ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
                     >
                       <Icon className="h-5 w-5" />
                       <span className="text-sm" data-es={labelES} data-en={labelEN} />
@@ -294,21 +294,17 @@ export default function Contact() {
             <img
               src={foto}
               alt="Foto de Aday Martín"
-              className="w-40 sm:w-56 md:w-72 lg:w-100 aspect-square object-cover shadow-lg ring-1 ring-white/10"
+              className="w-40 sm:w-56 md:w-72 lg:w-100 aspect-square object-cover rounded-xl shadow
+                         ring-1 ring-[rgb(var(--card-ring))]/60 bg-[rgb(var(--card))] transition-colors"
             />
           </div>
         </div>
       </div>
-
-      {/* ===== Styles locales (Tailwind helpers) ===== */}
-      <style>{`
-        .btn-soft { @apply inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 hover:border-slate-500 hover:bg-slate-800 transition; }
-      `}</style>
     </section>
   );
 }
 
-// ================= Icons (inline, sin dependencias externas) =================
+// ================= Icons =================
 function GitHubIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>

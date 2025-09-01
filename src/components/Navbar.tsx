@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useDarkMode } from "../hooks/useDarkMode";
+import { Sun, Moon } from "lucide-react";
 
 const NAME = "Aday Martín";
 
@@ -21,9 +23,7 @@ const SECTIONS_EN: Section[] = [
   { id: "carrera", label: "Career" },
   { id: "proyectos", label: "Projects" },
   { id: "contacto", label: "Contact" },
-
 ];
-
 
 const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
@@ -50,7 +50,6 @@ function useCurrentSection(ids: string[]) {
   return cur;
 }
 
-
 // Cambia los placeholder de <input>/<textarea> leyendo data-*-placeholder
 function updatePlaceholders(lang: "ES" | "EN") {
   const attr = lang === "EN" ? "data-en-placeholder" : "data-es-placeholder";
@@ -62,18 +61,14 @@ function updatePlaceholders(lang: "ES" | "EN") {
     });
 }
 
-
 export default function Navbar() {
+  const { theme, toggleTheme } = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
-  // ===== CAMBIO: idioma controlado (ES / EN) =====
   const [language, setLanguage] = useState<"ES" | "EN">("ES");
-  const [theme, setTheme] = useState("light");
-
-  // ===== Deriva las secciones según idioma =====
   const SECTIONS = language === "ES" ? SECTIONS_ES : SECTIONS_EN;
 
-  const currentId = useCurrentSection(SECTIONS.map(s => s.id));
-  const currentLabel = SECTIONS.find(s => s.id === currentId)?.label ?? SECTIONS[0].label;
+  const currentId = useCurrentSection(SECTIONS.map((s) => s.id));
+  const currentLabel = SECTIONS.find((s) => s.id === currentId)?.label ?? SECTIONS[0].label;
 
   // ----- Animación fluida de encogido por scroll -----
   const [t, setT] = useState(0); // 0..1 progreso
@@ -136,37 +131,33 @@ export default function Navbar() {
   // Bloquear scroll de fondo cuando el menú móvil está abierto
   useEffect(() => {
     document.documentElement.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.documentElement.style.overflow = ""; };
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   }, [menuOpen]);
 
-  // ===== NUEVO: init idioma desde localStorage y aplicar a <html> + data-* =====
+  // Idioma: init + aplicar
   useEffect(() => {
     const saved = (localStorage.getItem("lang") as "ES" | "EN" | null) || "ES";
     setLanguage(saved);
 
     const htmlLang = saved === "ES" ? "es" : "en";
     document.documentElement.setAttribute("lang", htmlLang);
-
-    // 👉 añade esta línea:
     document.documentElement.setAttribute("data-lang", htmlLang);
 
-    // Tu lógica que ya escribe textos con data-es/data-en…
     document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach((el) => {
       const v = el.getAttribute(`data-${htmlLang}`);
       if (v != null) el.textContent = v;
     });
 
-    // 👉 y esta línea para los placeholders:
     updatePlaceholders(saved);
   }, []);
-
 
   const goTo = (id: string) => {
     setMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // ===== CAMBIO: toggle idioma que afecta Navbar (state) y resto (data-*) =====
   const toggleLanguage = () => {
     const next = language === "ES" ? "EN" : "ES";
     setLanguage(next);
@@ -174,20 +165,15 @@ export default function Navbar() {
 
     const htmlLang = next === "ES" ? "es" : "en";
     document.documentElement.setAttribute("lang", htmlLang);
-
-    // 👉 añade:
     document.documentElement.setAttribute("data-lang", htmlLang);
 
-    // Mantienes tu actualización de textos:
     document.querySelectorAll<HTMLElement>("[data-es][data-en]").forEach((el) => {
       const v = el.getAttribute(`data-${htmlLang}`);
       if (v != null) el.textContent = v;
     });
 
-    // 👉 y actualizamos placeholders:
     updatePlaceholders(next);
   };
-
 
   return (
     <>
@@ -196,7 +182,8 @@ export default function Navbar() {
           className="fixed inset-x-0 top-0 z-50"
           style={{ paddingTop: "max(0px, env(safe-area-inset-top))" }}
         >
-          <div className="bg-slate-900/90 backdrop-blur shadow">
+          {/* Antes: bg-slate-900/90  -> ahora usa card con transparencia */}
+          <div className="bg-[rgb(var(--card))]/80 backdrop-blur shadow ring-1 ring-[rgb(var(--card-ring))]/60">
             <nav
               className="mx-auto flex items-center justify-between gap-3 transition-[max-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
               style={{
@@ -216,16 +203,17 @@ export default function Navbar() {
                   id="mobile-trigger"
                   aria-label="Abrir menú"
                   onClick={() => setMenuOpen(true)}
-                  className="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-md ring-1 ring-slate-700/60 hover:bg-slate-800/70 active:scale-95 transition"
+                  className="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-md ring-1 ring-[rgb(var(--card-ring))]/60 hover:bg-[rgb(var(--card))]/70 active:scale-95 transition text-[rgb(var(--fg))]"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-slate-200">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[rgb(var(--fg))]">
                     <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                 </button>
 
                 <div
-                  className="font-semibold tracking-tight text-orange-300"
+                  className="font-semibold tracking-tight"
                   style={{
+                    color: "rgb(var(--brand))", 
                     opacity: nameOpacity,
                     fontSize: nameSize,
                     transition: "opacity 500ms cubic-bezier(0.16,1,0.3,1), font-size 500ms cubic-bezier(0.16,1,0.3,1)",
@@ -250,8 +238,8 @@ export default function Navbar() {
                       className={cn(
                         "text-sm md:text-[0.95rem] transition-colors",
                         currentId === s.id
-                          ? "text-orange-300"
-                          : "text-slate-200/90 hover:text-white"
+                          ? "text-brand"
+                          : "text-[rgb(var(--fg))]/80 hover:text-[rgb(var(--fg))]"
                       )}
                     >
                       {s.label}
@@ -270,17 +258,17 @@ export default function Navbar() {
               >
                 <button
                   onClick={toggleLanguage}
-                  className="px-3 py-1 rounded-md border border-sky-400 hover:bg-sky-400/90 hover:text-white transition"
+                  className="px-3 py-1 rounded-md ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/70 transition text-[rgb(var(--fg))]"
                 >
                   {language}
                 </button>
                 <button
-                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                  className="px-3 py-1 rounded-md border border-slate-400 hover:bg-slate-700/90 hover:text-white transition"
-                  data-es="Tema"
-                  data-en="Theme"
+                  onClick={toggleTheme}
+                  className="p-2 rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] transition-colors text-[rgb(var(--fg))]"
+                  aria-label="Cambiar tema"
+                  title={theme === "dark" ? "Cambiar a claro" : "Cambiar a oscuro"}
                 >
-                  Tema
+                  {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                 </button>
               </div>
             </nav>
@@ -296,12 +284,15 @@ export default function Navbar() {
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex items-center gap-2 rounded-full bg-slate-800/95 px-4 py-2 text-sm text-slate-100 shadow-lg ring-1 ring-slate-700 backdrop-blur transition-all duration-300"
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm shadow-lg backdrop-blur transition-all duration-300
+                         bg-[rgb(var(--card))]/90 text-[rgb(var(--fg))] ring-1 ring-[rgb(var(--card-ring))]"
             >
               <span className="font-medium">{currentLabel}</span>
               <svg
                 className={cn("h-4 w-4 transition-transform", menuOpen && "rotate-180")}
-                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.24l3.71-3.01a.75.75 0 111.04 1.08l-4.24 3.44a.75.75 0 01-.95 0L5.21 8.31a.75.75 0 01.02-1.1z" />
               </svg>
@@ -313,9 +304,10 @@ export default function Navbar() {
                 role="menu"
                 className="hidden md:block absolute left-1/2 mt-2 w-[min(92vw,740px)]
                            -translate-x-1/2 overflow-hidden rounded-2xl 
-                           bg-slate-900/95 p-4 shadow-2xl ring-1 ring-slate-700 backdrop-blur"
+                           p-4 shadow-2xl backdrop-blur
+                           bg-[rgb(var(--card))]/95 ring-1 ring-[rgb(var(--card-ring))]"
               >
-                <div className="text-center mb-3 font-semibold text-orange-300">
+                <div className="text-center mb-3 font-semibold" style={{ color: "rgb(251 146 60)" }}>
                   {NAME}
                 </div>
 
@@ -326,8 +318,8 @@ export default function Navbar() {
                       role="menuitem"
                       onClick={() => goTo(s.id)}
                       className={cn(
-                        "rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-slate-800",
-                        currentId === s.id && "text-orange-300"
+                        "rounded-xl px-3 py-2 text-sm text-[rgb(var(--fg))] hover:bg-[rgb(var(--card))]/70",
+                        currentId === s.id && "text-brand"
                       )}
                     >
                       {s.label}
@@ -338,15 +330,17 @@ export default function Navbar() {
                 <div className="flex items-center justify-center gap-3">
                   <button
                     onClick={toggleLanguage}
-                    className="px-3 py-1 rounded-md border border-sky-400 hover:bg-sky-400 hover:text-white transition"
+                    className="px-3 py-1 rounded-md ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/70 transition text-[rgb(var(--fg))]"
                   >
                     {language}
                   </button>
                   <button
-                    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                    className="px-3 py-1 rounded-md border border-slate-400 hover:bg-slate-700 hover:text-white transition"
+                    onClick={toggleTheme}
+                    className="p-2 rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] transition-colors text-[rgb(var(--fg))]"
+                    aria-label="Cambiar tema"
+                    title={theme === "dark" ? "Cambiar a claro" : "Cambiar a oscuro"}
                   >
-                    Modo
+                    {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
@@ -366,27 +360,31 @@ export default function Navbar() {
         <div
           onClick={() => setMenuOpen(false)}
           className={cn(
-            "absolute inset-0 bg-black/50 transition-opacity duration-300",
+            "absolute inset-0 transition-opacity duration-300",
             menuOpen ? "opacity-100" : "opacity-0"
           )}
+          style={{ backgroundColor: "rgb(0 0 0 / 0.5)" }}
         />
         <div
           id="mobile-panel"
           className={cn(
-            "absolute inset-x-0 top-0 bg-slate-950 text-slate-100 pt-[max(16px,env(safe-area-inset-top))] pb-6",
+            "absolute inset-x-0 top-0 pt-[max(16px,env(safe-area-inset-top))] pb-6",
             "transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            "text-[rgb(var(--fg))] bg-[rgb(var(--bg))]",
             menuOpen ? "translate-y-0" : "-translate-y-full"
           )}
           style={{ willChange: "transform, opacity" }}
         >
           <div className="px-4 py-3 flex items-center justify-between">
-            <span className="font-semibold text-orange-300">{NAME}</span>
+            <span className="font-semibold" style={{ color: "rgb(var(--brand))" }}>
+              {NAME}
+            </span>
             <button
               aria-label="Cerrar menú"
               onClick={() => setMenuOpen(false)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md ring-1 ring-slate-700/60 hover:bg-slate-800/70 active:scale-95 transition"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md ring-1 ring-[rgb(var(--card-ring))]/60 hover:bg-[rgb(var(--card))]/70 active:scale-95 transition text-[rgb(var(--fg))]"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-slate-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[rgb(var(--fg))]">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
@@ -398,8 +396,9 @@ export default function Navbar() {
                 key={s.id}
                 onClick={() => goTo(s.id)}
                 className={cn(
-                  "w-full text-left rounded-lg px-4 py-3 text-base ring-1 ring-slate-800 hover:bg-slate-900 transition",
-                  currentId === s.id && "text-orange-300 ring-orange-300/40"
+                  "w-full text-left rounded-lg px-4 py-3 text-base transition",
+                  "ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/70 text-[rgb(var(--fg))]",
+                  currentId === s.id && "text-brand"
                 )}
               >
                 {s.label}
@@ -410,16 +409,17 @@ export default function Navbar() {
           <div className="px-4 mt-4 flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-sky-500 hover:bg-sky-600/20 transition"
+              className="flex-1 rounded-lg px-4 py-2 transition text-[rgb(var(--fg))] ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/70"
             >
               {language === "ES" ? "Idioma: ES" : "Language: EN"}
-
             </button>
             <button
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              className="flex-1 rounded-lg px-4 py-2 ring-1 ring-slate-600 hover:bg-slate-700/30 transition"
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))] transition-colors text-[rgb(var(--fg))]"
+              aria-label="Cambiar tema"
+              title={theme === "dark" ? "Cambiar a claro" : "Cambiar a oscuro"}
             >
-              Modo
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
           </div>
         </div>

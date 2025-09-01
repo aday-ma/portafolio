@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import portfolioImg from "../assets/portfolio.png";
 import privadoImg from "../assets/privado.png";
 
-
 // =====================
 // Tipos y datos ejemplo
 // =====================
@@ -43,7 +42,7 @@ const PROJECTS: Project[] = [
     tech: ["HTML", "CSS", "Javascript", "PHP"],
     year: new Date().getFullYear(),
     role: "Freelance",
-    isPrivate: true, // no mostramos enlace por privacidad
+    isPrivate: true,
   },
 ];
 
@@ -64,12 +63,15 @@ function ProjectCard({ p }: { p: Project }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ type: "spring", stiffness: 120, damping: 16 }}
-      className="rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700 shadow-lg hover:shadow-xl transition-shadow"
+      className="
+        rounded-2xl overflow-hidden shadow
+        bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))]
+        transition-shadow hover:shadow-lg
+      "
     >
       {/* Imagen / mockup */}
-      <div className="relative w-full h-48 bg-slate-900">
+      <div className="relative w-full h-48 bg-[rgb(var(--card))]">
         {p.imageSrc ? (
-          // Si usas Next.js, cambia por <Image fill ... />
           <img
             src={p.imageSrc}
             alt={`${p.title} mockup`}
@@ -80,7 +82,13 @@ function ProjectCard({ p }: { p: Project }) {
           <PlaceholderVisual title={p.title} />
         )}
         {p.featured && (
-          <span className="absolute top-3 left-3 rounded-full bg-emerald-500/90 text-white text-xs font-semibold px-3 py-1">
+          <span
+            className="
+              absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-semibold
+              bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]
+              ring-1 ring-transparent
+            "
+          >
             Destacado
           </span>
         )}
@@ -88,15 +96,20 @@ function ProjectCard({ p }: { p: Project }) {
 
       {/* Contenido */}
       <div className="p-6">
-        <h3 className="text-xl font-semibold leading-tight">{p.title}</h3>
-        <p className="mt-2 text-slate-300 text-sm">{p.description}</p>
+        <h3 className="text-xl font-semibold leading-tight text-[rgb(var(--fg))]">
+          {p.title}
+        </h3>
+        <p className="mt-2 text-sm text-[rgb(var(--muted))]">{p.description}</p>
 
         {/* Metadata */}
         <div className="mt-3 flex flex-wrap gap-2">
           {p.tech.map((t) => (
             <span
               key={t}
-              className="px-3 py-1 text-xs bg-slate-700 rounded-full"
+              className="
+                px-3 py-1 text-xs rounded-full
+                bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))]
+              "
             >
               {t}
             </span>
@@ -104,12 +117,8 @@ function ProjectCard({ p }: { p: Project }) {
         </div>
 
         <div className="mt-4 flex items-center gap-3 text-sm">
-          {p.year && (
-            <span className="text-slate-400">{p.year}</span>
-          )}
-          {p.role && (
-            <span className="text-slate-400">• {p.role}</span>
-          )}
+          {p.year && <span className="text-[rgb(var(--muted))]">{p.year}</span>}
+          {p.role && <span className="text-[rgb(var(--muted))]">• {p.role}</span>}
         </div>
 
         {/* Acciones */}
@@ -119,7 +128,11 @@ function ProjectCard({ p }: { p: Project }) {
               href={p.link}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-slate-100 text-slate-900 hover:bg-white"
+              className="
+                inline-flex items-center gap-2 rounded-xl px-4 py-2
+                bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]
+                hover:opacity-90 transition
+              "
             >
               <span>Ver demo</span>
             </a>
@@ -129,13 +142,23 @@ function ProjectCard({ p }: { p: Project }) {
               href={p.repo}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 border border-slate-600 hover:border-slate-500"
+              className="
+                inline-flex items-center gap-2 rounded-xl px-4 py-2
+                ring-1 ring-[rgb(var(--card-ring))]
+                hover:bg-[rgb(var(--card))]/60 transition
+              "
             >
               <span>Ver código</span>
             </a>
           )}
           {p.isPrivate && (
-            <span className="inline-flex items-center rounded-xl px-3 py-1 text-xs bg-slate-700 text-slate-200">
+            <span
+              className="
+                inline-flex items-center rounded-xl px-3 py-1 text-xs
+                bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))]
+                text-[rgb(var(--muted))]
+              "
+            >
               Enlace privado
             </span>
           )}
@@ -148,10 +171,10 @@ function ProjectCard({ p }: { p: Project }) {
 // Placeholder por si no hay imagen
 function PlaceholderVisual({ title }: { title: string }) {
   return (
-    <div className="w-full h-full grid place-items-center">
+    <div className="w-full h-full grid place-items-center bg-[rgb(var(--card))]">
       <div className="text-center">
-        <div className="mx-auto mb-2 h-10 w-10 rounded-xl bg-slate-700" />
-        <p className="text-slate-500 text-xs">{title}</p>
+        <div className="mx-auto mb-2 h-10 w-10 rounded-xl bg-[rgb(var(--card-ring))]" />
+        <p className="text-[rgb(var(--muted))] text-xs">{title}</p>
       </div>
     </div>
   );
@@ -174,10 +197,10 @@ function ProjectsControls({
       <button
         onClick={() => onChange(null)}
         className={cx(
-          "px-3 py-1 text-xs rounded-full border",
+          "px-3 py-1 text-xs rounded-full",
           active === null
-            ? "bg-slate-100 text-slate-900 border-slate-200"
-            : "border-slate-600 hover:border-slate-500"
+            ? "bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]"
+            : "ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
         )}
       >
         Todo
@@ -187,10 +210,10 @@ function ProjectsControls({
           key={t}
           onClick={() => onChange(active === t ? null : t)}
           className={cx(
-            "px-3 py-1 text-xs rounded-full border",
+            "px-3 py-1 text-xs rounded-full",
             active === t
-              ? "bg-slate-100 text-slate-900 border-slate-200"
-              : "border-slate-600 hover:border-slate-500"
+              ? "bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]"
+              : "ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
           )}
         >
           {t}
@@ -233,12 +256,12 @@ export default function ProjectsSection({
   }, [filtered]);
 
   return (
-    <section id="proyectos" className="px-6 py-16 bg-slate-900 text-slate-100">
+    <section id="proyectos" className="px-6 py-16 bg-[rgb(var(--bg))] text-[rgb(var(--fg))] transition-colors">
       <div className="max-w-6xl mx-auto">
         <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="text-3xl font-bold">{title}</h2>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-sm mt-1 text-[rgb(var(--muted))]">
               Añade nuevos proyectos simplemente incorporándolos al array.
             </p>
           </div>
