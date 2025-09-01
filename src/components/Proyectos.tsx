@@ -3,58 +3,60 @@ import { motion } from "framer-motion";
 import portfolioImg from "../assets/portfolio.png";
 import privadoImg from "../assets/privado.png";
 
-// =====================
-// Tipos y datos ejemplo
-// =====================
 export type Project = {
   id: string;
-  title: string;
-  description: string;
-  imageSrc?: string; // ruta a mockup o screenshot
-  tech: string[]; // etiquetas de tecnologías
+  title_es: string;
+  title_en: string;
+  description_es: string;
+  description_en: string;
+  imageSrc?: string;
+  tech: string[];
   year?: number;
-  role?: string;
-  link?: string; // opcional: demo pública
-  repo?: string; // opcional: repo público
-  isPrivate?: boolean; // si es para cliente y no hay enlace
-  featured?: boolean; // opcional: destacar en el grid
+  role_es?: string;
+  role_en?: string;
+  link?: string;
+  repo?: string;
+  isPrivate?: boolean;
+  featured?: boolean;
 };
 
 const PROJECTS: Project[] = [
   {
     id: "portfolio",
-    title: "🌐 Portfolio Personal",
-    description:
-      "Portfolio en React + Tailwind con animaciones, navegación fluida y secciones de carrera, educación y contacto.",
+    title_es: "🌐 Portfolio Personal",
+    title_en: "🌐 Personal Portfolio",
+    description_es:
+      "Portfolio en React + Tailwind con animaciones, navegación fluida, diseño responsive y secciones de carrera, educación, proyectos, skills y contacto.",
+    description_en:
+      "React + Tailwind portfolio with animations, smooth navigation, responsive design and sections for career, education, projects, skills and contact.",
     imageSrc: portfolioImg,
     tech: ["React", "Tailwind", "TypeScript", "HTML", "CSS", "Git"],
     year: new Date().getFullYear(),
-    role: "Desarrolladora Frontend",
+    role_es: "Desarrollador Frontend",
+    role_en: "Frontend Developer",
     repo: "https://github.com/aday-ma/portafolio",
     featured: true,
   },
   {
     id: "freelance-1",
-    title: "💼 Proyecto Freelance",
+    title_es: "💼 Proyecto Freelance",
+    title_en: "💼 Freelance Project",
+    description_es:
+      "Sitio web a medida para cliente: página de venta con sistema de logeo, compra totalmente funcional, correos y administración tanto de productos como de pedidos.",
+    description_en:
+      "Custom client website: sales page with login system, fully functional checkout, emails, and admin for products and orders.",
     imageSrc: privadoImg,
-    description:
-      "Sitio web a medida para cliente: pagina de venta con sistema de logeo, compra totalmente funcional, correos y administracion tanto de productos como de pedidos.",
     tech: ["HTML", "CSS", "Javascript", "PHP"],
     year: new Date().getFullYear(),
-    role: "Freelance",
+    role_es: "Freelance",
+    role_en: "Freelance",
     isPrivate: true,
   },
 ];
 
-// =====================
-// Utilidades
-// =====================
 const cx = (...classes: (string | false | null | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
-// =====================
-// Card de Proyecto
-// =====================
 function ProjectCard({ p }: { p: Project }) {
   return (
     <motion.article
@@ -69,18 +71,17 @@ function ProjectCard({ p }: { p: Project }) {
         transition-shadow hover:shadow-lg
       "
     >
-      {/* Imagen / mockup */}
+      {/* Imagen */}
       <div className="relative w-full h-48 bg-[rgb(var(--card))]">
         {p.imageSrc ? (
           <img
             src={p.imageSrc}
-            alt={`${p.title} mockup`}
+            alt={`${p.title_es} / ${p.title_en} mockup`}
             className="w-full h-full object-cover"
             loading="lazy"
           />
-        ) : (
-          <PlaceholderVisual title={p.title} />
-        )}
+        ) : null}
+
         {p.featured && (
           <span
             className="
@@ -88,20 +89,27 @@ function ProjectCard({ p }: { p: Project }) {
               bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]
               ring-1 ring-transparent
             "
-          >
-            Destacado
-          </span>
+            data-es="Destacado"
+            data-en="Featured"
+          ></span>
         )}
       </div>
 
       {/* Contenido */}
       <div className="p-6">
-        <h3 className="text-xl font-semibold leading-tight text-[rgb(var(--fg))]">
-          {p.title}
-        </h3>
-        <p className="mt-2 text-sm text-[rgb(var(--muted))]">{p.description}</p>
+        <h3
+          className="text-xl font-semibold leading-tight text-[rgb(var(--fg))]"
+          data-es={p.title_es}
+          data-en={p.title_en}
+        ></h3>
 
-        {/* Metadata */}
+        <p
+          className="mt-2 text-sm text-[rgb(var(--muted))]"
+          data-es={p.description_es}
+          data-en={p.description_en}
+        ></p>
+
+        {/* Tecnologías */}
         <div className="mt-3 flex flex-wrap gap-2">
           {p.tech.map((t) => (
             <span
@@ -116,9 +124,16 @@ function ProjectCard({ p }: { p: Project }) {
           ))}
         </div>
 
+        {/* Año y rol */}
         <div className="mt-4 flex items-center gap-3 text-sm">
           {p.year && <span className="text-[rgb(var(--muted))]">{p.year}</span>}
-          {p.role && <span className="text-[rgb(var(--muted))]">• {p.role}</span>}
+          {p.role_es && p.role_en && (
+            <span
+              className="text-[rgb(var(--muted))]"
+              data-es={`• ${p.role_es}`}
+              data-en={`• ${p.role_en}`}
+            ></span>
+          )}
         </div>
 
         {/* Acciones */}
@@ -133,9 +148,9 @@ function ProjectCard({ p }: { p: Project }) {
                 bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]
                 hover:opacity-90 transition
               "
-            >
-              <span>Ver demo</span>
-            </a>
+              data-es="Ver demo"
+              data-en="View demo"
+            ></a>
           )}
           {p.repo && !p.isPrivate && (
             <a
@@ -147,9 +162,9 @@ function ProjectCard({ p }: { p: Project }) {
                 ring-1 ring-[rgb(var(--card-ring))]
                 hover:bg-[rgb(var(--card))]/60 transition
               "
-            >
-              <span>Ver código</span>
-            </a>
+              data-es="Ver código"
+              data-en="View code"
+            ></a>
           )}
           {p.isPrivate && (
             <span
@@ -158,9 +173,9 @@ function ProjectCard({ p }: { p: Project }) {
                 bg-[rgb(var(--card))] ring-1 ring-[rgb(var(--card-ring))]
                 text-[rgb(var(--muted))]
               "
-            >
-              Enlace privado
-            </span>
+              data-es="Enlace privado"
+              data-en="Private link"
+            ></span>
           )}
         </div>
       </div>
@@ -168,21 +183,6 @@ function ProjectCard({ p }: { p: Project }) {
   );
 }
 
-// Placeholder por si no hay imagen
-function PlaceholderVisual({ title }: { title: string }) {
-  return (
-    <div className="w-full h-full grid place-items-center bg-[rgb(var(--card))]">
-      <div className="text-center">
-        <div className="mx-auto mb-2 h-10 w-10 rounded-xl bg-[rgb(var(--card-ring))]" />
-        <p className="text-[rgb(var(--muted))] text-xs">{title}</p>
-      </div>
-    </div>
-  );
-}
-
-// =====================
-// Controles (filtros simples)
-// =====================
 function ProjectsControls({
   allTech,
   active,
@@ -202,9 +202,10 @@ function ProjectsControls({
             ? "bg-[rgb(var(--accent))] text-[rgb(var(--accent-fg))]"
             : "ring-1 ring-[rgb(var(--card-ring))] hover:bg-[rgb(var(--card))]/60"
         )}
-      >
-        Todo
-      </button>
+        data-es="Todo"
+        data-en="All"
+      ></button>
+
       {allTech.map((t) => (
         <button
           key={t}
@@ -223,15 +224,10 @@ function ProjectsControls({
   );
 }
 
-// =====================
-// Sección principal
-// =====================
 export default function ProjectsSection({
   items = PROJECTS,
-  title = "Proyectos",
 }: {
   items?: Project[];
-  title?: string;
 }) {
   const [filter, setFilter] = useState<string | null>(null);
 
@@ -241,31 +237,38 @@ export default function ProjectsSection({
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [items]);
 
-  const filtered = useMemo(() => {
-    if (!filter) return items;
-    return items.filter((p) => p.tech.includes(filter));
-  }, [items, filter]);
+  const filtered = !filter ? items : items.filter((p) => p.tech.includes(filter));
 
-  const ordered = useMemo(() => {
-    // Destacados primero, luego por año desc
-    return [...filtered].sort((a, b) => {
-      const feat = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
-      if (feat !== 0) return feat;
-      return (b.year ?? 0) - (a.year ?? 0);
-    });
-  }, [filtered]);
+  const ordered = [...filtered].sort((a, b) => {
+    const feat = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+    if (feat !== 0) return feat;
+    return (b.year ?? 0) - (a.year ?? 0);
+  });
 
   return (
-    <section id="proyectos" className="px-6 py-16 bg-[rgb(var(--bg))] text-[rgb(var(--fg))] transition-colors">
+    <section
+      id="proyectos"
+      className="px-6 py-16 bg-[rgb(var(--bg))] text-[rgb(var(--fg))] transition-colors"
+    >
       <div className="max-w-6xl mx-auto">
         <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-3xl font-bold">{title}</h2>
-            <p className="text-sm mt-1 text-[rgb(var(--muted))]">
-              Añade nuevos proyectos simplemente incorporándolos al array.
-            </p>
+            <h2
+              className="text-3xl font-bold"
+              data-es="Proyectos"
+              data-en="Projects"
+            ></h2>
+            <p
+              className="text-sm mt-1 text-[rgb(var(--muted))]"
+              data-es="Mis proyectos, iré actualizando la sección a medida que vaya desarrollando nuevos."
+              data-en="My projects — I’ll keep this section updated as I build new ones."
+            ></p>
           </div>
-          <ProjectsControls allTech={allTech} active={filter} onChange={setFilter} />
+          <ProjectsControls
+            allTech={allTech}
+            active={filter}
+            onChange={setFilter}
+          />
         </header>
 
         <motion.div

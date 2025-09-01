@@ -6,6 +6,7 @@ html, body { scroll-behavior: smooth; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 
+
 /* 1) Tokens de tema (claro por defecto) */
 :root {
   --bg: 242, 241, 240;      /* slate-50/100 → gris muy suave */
@@ -15,7 +16,7 @@ html, body { scroll-behavior: smooth; }
   --card-ring: 0 0 0 / 0.08;
   --accent: 57, 142, 196;    /* indigo-600 */
   --accent-fg: 255 255 255;
-  --brand: 57, 142, 196; /* naranja por defecto */
+  --brand: 57, 142, 196; 
 }
 
 
@@ -28,7 +29,7 @@ html, body { scroll-behavior: smooth; }
   --card-ring: 51 65 85;
   --accent: 21, 93, 176;
   --accent-fg: 255 255 255;
-  --brand: 21, 93, 176; /* naranja por defecto */
+  --brand: 21, 93, 176; 
 }
 
 
